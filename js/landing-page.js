@@ -1,38 +1,39 @@
-// Global Variables 
-
-const pageSections = document.querySelectorAll("section");
-const navbar = document.getElementById("navbar__list");
-
-
-// Build Nav
-
-for (let i = 0; i < pageSections.length; i++) {
-    const newLi = document.createElement("li");
-    const sections = document.getElementsByTagName("section");
-    newLi.innerHTML = `<a href="#${sections[i].id}" style="color:white;text-decoration:none;">${sections[i].id}</a>`;
-    navbar.appendChild(newLi);
-    newLi.style.cssText = 'padding:15px;';
-    navbar.style.cssText = 'background-color:black;';
-};
-// Add class 'active' to section when near top of viewport
-// reference: https://gomakethings.com/how-to-test-if-an-element-is-in-the-viewport-with-vanilla-javascript/
-
-function inViewport(element) {
-    let bounding = element.getBoundingClientRect();
+// Helper function to check if element is in viewport
+function isElementInViewport(el) {
+    var rect = el.getBoundingClientRect();
     return (
-        bounding.top >= 0 &&
-        bounding.left >= 0 &&
-        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
     );
-};
+  }
 
-window.addEventListener("scroll", function() {
-    for (const section of pageSections) {
-        if (inViewport(section)) {
-            section.classList.add("active");
-        } else {
-            section.classList.remove("active");
+// Building nav
+const sections = document.getElementsByTagName('section');
+const navUl = document.getElementById('navbar__list');
+
+const len = sections.length;
+
+for (let item of sections){
+    const listItem = document.createElement('li');
+    listItem.innerHTML = `<a href='#${item.id}'>${item.dataset.nav}</a>`;
+    navUl.appendChild(listItem);
+}
+/*
+Added class 'my-active-class' to section when near top of viewport
+Added class 'my-active-menu' to menu items when near viewport
+*/
+
+window.addEventListener("scroll", function(){
+    for (let i = 0; i < len; i++){
+        if(isElementInViewport(sections[i])){
+            sections[i].classList.add("my-active-class");
+            navUl.children[i].classList.add("my-active-menu");
+        }
+        if(!isElementInViewport(sections[i])){
+            sections[i].classList.remove("my-active-class");
+            navUl.children[i].classList.remove("my-active-menu");
         }
     }
 });
