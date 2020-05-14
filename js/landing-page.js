@@ -1,20 +1,17 @@
-/**
- * Define Global Variables
- *
- */
 
-// sections is an HTMLCollection live and ordered, which does not include spaces.
-const sections = document.getElementsByTagName("section");
-const nav = document.querySelector("#navbar__list");
 /**
  * End Global Variables
  * Start Helper Functions
  *
  */
+// sections is an HTMLCollection live and ordered, which does not include spaces.
+const sections = document.getElementsByTagName("section");
+const nav = document.querySelector("#navbar__list");
+
 
 function insertNavLink(navLinkName, sectionId) {
   // create a link
-  const htmlTextToAdd = `<li><a href="#${sectionId}" class="menu__link">${navLinkName}</a></li>`;
+  const htmlTextToAdd = `<li><a href="#${sectionId}" class="menu__link hide">${navLinkName}</a></li>`;
   // add it to the nav
   nav.insertAdjacentHTML("beforeend", htmlTextToAdd);
 }
@@ -87,43 +84,6 @@ function smoothScroll(el) {
   });
 }
 
-// create a "Go to Top" hidden floating button
-function createBtnUp() {
-  const htmlTextToAdd = `<a href="#" class="bottom__link hide">To top</a>`;
-  document.body.insertAdjacentHTML("afterbegin", htmlTextToAdd);
-}
-
-function showBtnUp() {
-  // create and add the buttom to the DOM as hidden element
-  const btn = document.querySelector(".bottom__link");
-  // remove the button if absolute scrolling y is lower than browser window viewport
-  if (window.pageYOffset <= 0.6 * window.innerHeight) {
-    btn.classList.add("hide");
-  } else {
-    btn.classList.remove("hide");
-    // add event handler only if button is visible
-    btn.addEventListener("click", function(e) {
-      e.preventDefault();
-      // smooth scroll to top of page
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: "smooth"
-      });
-    });
-  }
-}
-
-// show navigation bar after delay is elapsed, when used with scroll events,
-// timer gets reset and until the user stops scrolling
-function hideNav(delay) {
-  var timer;
-  timer && clearTimeout(timer);
-  nav.classList.add("hide");
-  timer = setTimeout(function() {
-    nav.classList.remove("hide");
-  }, delay);
-}
 
 /**
  * End Main Functions
@@ -134,7 +94,6 @@ function hideNav(delay) {
 document.addEventListener("DOMContentLoaded", function() {
   // Build menu and hidden Button up on page load
   buildNav(sections);
-  createBtnUp();
 
   // Scroll to section on link click
   // using event delegation
@@ -155,7 +114,6 @@ document.addEventListener("DOMContentLoaded", function() {
     window.addEventListener("scroll", function() {
       setSectionIntoViewActive(sections);
       hideNav(1000);
-      showBtnUp();
     }),
     // this is a delay to reduce the frequency of scrolling events fired
     2000
